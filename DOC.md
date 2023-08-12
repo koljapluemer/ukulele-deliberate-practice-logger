@@ -1,0 +1,1 @@
+Just a simply Vue skeleton, as it stands without any components whatsover. Simply 3 DaisyUI cards getting replaced, and the whole thing being saved in LocalStorage.
