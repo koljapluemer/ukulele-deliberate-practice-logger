@@ -2,22 +2,26 @@
 import { ref, watch } from "vue";
 
 let sessions = [];
+let session = ref({});
 // see if sessions in localStorage
 if (localStorage.getItem("sessions")) {
   sessions = JSON.parse(localStorage.getItem("sessions"));
 }
 
-let session = ref({
-  topic: "",
-  unit: "",
-  goal: "",
-  startedAt: null,
-  stoppedAt: null,
-  questionData: {},
-  state: "creating",
-});
+const createNewSession = () => {
+  session.value = {
+    topic: "",
+    unit: "",
+    goal: "",
+    startedAt: null,
+    stoppedAt: null,
+    questionData: {},
+    comment: "",
+    state: "creating",
+  };
+};
 
-sessions.push(session.value);
+createNewSession();
 
 const startSession = () => {
   session.value.state = "running";
@@ -31,16 +35,9 @@ const stopSession = () => {
 
 const saveSession = () => {
   session.value.state = "saved";
+  sessions.push(session.value);
   localStorage.setItem("sessions", JSON.stringify(sessions));
-  session.value = {
-    topic: "",
-    unit: "",
-    goal: "",
-    startedAt: null,
-    stoppedAt: null,
-    questionData: {},
-    state: "creating",
-  };
+  createNewSession();
 };
 
 const likertQuestions = [
@@ -56,7 +53,7 @@ const likertQuestions = [
 <template>
   <header></header>
 
-  <main class="flex flex-col justify-around items-center p-4">
+  <main class="flex flex-col justify-around items-center p-4" v-if="session">
     <div class="" v-if="session.state === 'creating'">
       <h1 class="font-bold text-2xl">Hi. Let's practice some Uke.</h1>
 
@@ -122,9 +119,7 @@ const likertQuestions = [
         <p class="text-lg">
           Started at: {{ session.startedAt.toLocaleString() }}
         </p>
-        <p class="text-lg">
-          Stopped at: {{ session.stoppedAt.toLocaleString() }}
-        </p>
+
         <div class="card-actions justify-end">
           <button class="btn btn-primary" @click="stopSession">
             End Session
@@ -205,6 +200,19 @@ const likertQuestions = [
               </tr>
             </tbody>
           </table>
+
+          <div class="form-control w-full max-w-xs my-2">
+            <label class="label">
+              <span class="label-text"
+                >Comment (what was hard? what was interesting?)</span
+              >
+            </label>
+            <textarea
+              class="textarea textarea-bordered h-24"
+              placeholder="..."
+              v-model="session.comment"
+            ></textarea>
+          </div>
           <div class="card-actions justify-end">
             <button class="btn btn-primary" @click="saveSession">
               Save Session
