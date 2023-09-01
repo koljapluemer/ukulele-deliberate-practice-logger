@@ -42,7 +42,6 @@ const saveSession = () => {
   createNewSession();
 };
 
-
 const likertQuestions = [
   "I reached my goal successfully.",
   "I was able to focus on the task at hand.",
@@ -51,8 +50,6 @@ const likertQuestions = [
   "The unit was easy.",
   "The unit was exhausting.",
 ];
-
-
 </script>
 
 <template>
@@ -240,6 +237,16 @@ const likertQuestions = [
       <label for="my-drawer" class="drawer-overlay"></label>
       <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
         <li>Sessions Today: {{ nrOfSessionToday }}</li>
+        <li>
+        <h3>Sessions:</h3>
+          <ul class="list-disc">
+            <li v-for="session in sessions" class="flex gap-1 flex-row">
+              <span v-for="answer in Object.values(session.questionData)">
+                {{ answer }}
+              </span>
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
